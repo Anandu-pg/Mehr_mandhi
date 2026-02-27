@@ -279,33 +279,60 @@ ul {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(239, 233, 223, 0.98);
-  z-index: 999;
+  background: rgba(239, 233, 223, 0.99);
+  z-index: 1200;
   place-items: center;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .mobile-nav-overlay.open {
   display: flex;
 }
 
+.mobile-nav-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--charcoal);
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition);
+  z-index: 1201;
+}
+
+.mobile-nav-close:hover {
+  background: rgba(58, 49, 43, 0.1);
+  color: var(--red);
+}
+
 .mobile-nav ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
   text-align: center;
 }
 
 .mobile-nav-link {
   font-family: var(--ff-serif);
-  font-size: 1.6rem;
-  color: var(--charcoal);
+  font-size: 1.8rem;
+  color: var(--charcoal) !important;
   transition: color var(--transition);
+  text-decoration: none;
 }
 
 .mobile-nav-link:hover {
-  color: var(--red);
+  color: var(--red) !important;
 }
 
 .mobile-book-btn {
@@ -316,6 +343,7 @@ ul {
   font-family: var(--ff-sans);
   font-size: 1rem !important;
   font-weight: 600;
+  margin-top: 8px;
 }
 
 /* ========================
@@ -1251,6 +1279,16 @@ ul {
 /* ========================
    DISH GALLERY SCROLL STRIP
    ======================== */
+.dish-gallery {
+  margin-top: 28px;
+  position: relative;
+}
+
+/* Mobile price cells — hidden by default, shown on mobile */
+.mlt-prices-mobile {
+  display: none;
+}
+
 .dish-gallery {
   margin-top: 28px;
   position: relative;
@@ -2293,10 +2331,22 @@ ul {
     grid-row: span 2;
   }
 
-  /* Reviews */
+  /* Reviews — horizontal slider on all mobile sizes */
   .reviews-grid {
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    display: flex !important;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding-bottom: 16px;
+    grid-template-columns: unset;
+  }
+
+  .review-card {
+    flex: 0 0 85vw;
+    max-width: 360px;
+    scroll-snap-align: start;
   }
 
   .rating-summary {
@@ -2413,6 +2463,7 @@ ul {
   /* Menu table mobile */
   .menu-list-table {
     border-radius: var(--radius-md);
+    overflow: visible;
   }
 
   .mlt-header {
@@ -2422,24 +2473,82 @@ ul {
   .mlt-row {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 18px 16px;
+    gap: 0;
+    padding: 16px 16px;
   }
 
-  .mlt-row .mlt-price {
-    font-size: 1rem;
-    text-align: left;
+  .mlt-name {
+    margin-bottom: 12px;
+    flex-wrap: nowrap;
+    align-items: flex-start;
   }
 
-  /* Reviews mobile */
+  /* Mobile price rows with labels */
+  .mlt-prices-mobile {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid rgba(178, 135, 93, 0.12);
+    margin-top: 4px;
+  }
+
+  .mlt-price-cell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border-right: 1px solid rgba(178, 135, 93, 0.12);
+  }
+
+  .mlt-price-cell:last-child {
+    border-right: none;
+  }
+
+  .mlt-price-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    margin-bottom: 4px;
+  }
+
+  .mlt-price-val {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #6B5C52;
+  }
+
+  .mlt-price-val.highlight {
+    color: var(--red);
+    font-weight: 800;
+  }
+
+  .mlt-price-cell.highlight-cell {
+    background: rgba(211, 26, 42, 0.04);
+  }
+
+  /* Hide the default grid price spans on mobile — replaced by price-cells */
+  .mlt-row>.mlt-price {
+    display: none;
+  }
+
+  /* Reviews mobile — horizontal slider one card at a time */
   .reviews-grid {
-    grid-template-columns: 1fr;
-    overflow-x: visible;
-    scroll-snap-type: none;
+    display: flex !important;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding-bottom: 16px;
   }
 
   .review-card {
+    flex: 0 0 88vw;
+    max-width: 340px;
     min-width: unset;
+    scroll-snap-align: start;
   }
 
   .rating-summary {

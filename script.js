@@ -10,17 +10,17 @@
   'use strict';
 
   // ─── ELEMENT REFERENCES ─────────────────────────────────────
-  const header         = document.getElementById('site-header');
-  const hamburgerBtn   = document.getElementById('hamburger-btn');
-  const mobileOverlay  = document.getElementById('mobile-nav-overlay');
-  const mobileLinks    = document.querySelectorAll('.mobile-nav-link');
-  const navLinks       = document.querySelectorAll('.nav-link');
-  const menuTabs       = document.querySelectorAll('.menu-tab');
-  const menuPanels     = document.querySelectorAll('.menu-panel');
-  const scrollTopBtn   = document.getElementById('scroll-top-btn');
-  const animEls        = document.querySelectorAll('[data-animate]');
-  const sections       = document.querySelectorAll('section[id], #home');
-  const resForm        = document.getElementById('reservation-form');
+  const header = document.getElementById('site-header');
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileOverlay = document.getElementById('mobile-nav-overlay');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const menuTabs = document.querySelectorAll('.menu-tab');
+  const menuPanels = document.querySelectorAll('.menu-panel');
+  const scrollTopBtn = document.getElementById('scroll-top-btn');
+  const animEls = document.querySelectorAll('[data-animate]');
+  const sections = document.querySelectorAll('section[id], #home');
+  const resForm = document.getElementById('reservation-form');
 
   // ─── STICKY HEADER — SCROLL CLASS ───────────────────────────
   function onScroll() {
@@ -45,7 +45,7 @@
   function updateActiveNav() {
     let current = '';
     sections.forEach((section) => {
-      const sectionTop    = section.offsetTop - 100;
+      const sectionTop = section.offsetTop - 100;
       const sectionBottom = sectionTop + section.offsetHeight;
       if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
         current = section.getAttribute('id');
@@ -82,6 +82,12 @@
     const isOpen = hamburgerBtn.classList.contains('open');
     isOpen ? closeMobileMenu() : openMobileMenu();
   });
+
+  // Close button inside overlay
+  const mobileCloseBtn = document.getElementById('mobile-nav-close');
+  if (mobileCloseBtn) {
+    mobileCloseBtn.addEventListener('click', closeMobileMenu);
+  }
 
   mobileLinks.forEach((link) => {
     link.addEventListener('click', closeMobileMenu);
@@ -267,11 +273,11 @@
     resForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const name    = document.getElementById('res-name').value.trim();
-      const phone   = document.getElementById('res-phone').value.trim();
-      const date    = document.getElementById('res-date').value;
-      const time    = document.getElementById('res-time').value;
-      const guests  = document.getElementById('res-guests').value;
+      const name = document.getElementById('res-name').value.trim();
+      const phone = document.getElementById('res-phone').value.trim();
+      const date = document.getElementById('res-date').value;
+      const time = document.getElementById('res-time').value;
+      const guests = document.getElementById('res-guests').value;
 
       if (!name || !phone || !date || !time || !guests) {
         showToast('Please fill in all fields.', 'error');
@@ -304,7 +310,7 @@
     toast.className = 'mehr-toast';
     toast.textContent = message;
 
-    const bg      = type === 'error' ? '#D31A2A' : '#25D366';
+    const bg = type === 'error' ? '#D31A2A' : '#25D366';
     toast.style.cssText = `
       position:fixed;bottom:110px;left:50%;transform:translateX(-50%);
       background:${bg};color:#fff;
