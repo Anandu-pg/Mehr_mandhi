@@ -868,6 +868,8 @@
           <div class="gallery-overlay"><span>Elegant Seating</span></div>
         </div>
       </div>
+      <!-- Mobile gallery dots (populated by JS) -->
+      <div class="gallery-mob-dots" id="gallery-mob-dots"></div>
     </div>
   </section>
 
@@ -938,6 +940,33 @@
             <p>Plush sofas, ambient lighting — our private lounge is ideal for intimate celebrations.</p>
           </div>
         </div>
+      </div>
+
+      <!-- Mobile-only ambiance slideshow (hidden on desktop via CSS) -->
+      <div class="ambiance-mobile-slider" id="ambiance-mobile-slider" aria-label="Ambiance slideshow">
+        <div class="mob-slide-track" id="ambiance-slide-track">
+          <div class="mob-slide">
+            <img src="ambiance5.jpg" alt="Main Dining Area" />
+            <div class="mob-slide-label"><i class="fas fa-star"></i> Main Dining Area</div>
+          </div>
+          <div class="mob-slide">
+            <img src="ambiance1.jpg" alt="Grand Entrance" />
+            <div class="mob-slide-label"><i class="fas fa-door-open"></i> Grand Entrance</div>
+          </div>
+          <div class="mob-slide">
+            <img src="ambiance2.jpg" alt="Private Lounge" />
+            <div class="mob-slide-label"><i class="fas fa-couch"></i> Private Lounge</div>
+          </div>
+          <div class="mob-slide">
+            <img src="ambiance3.jpg" alt="Open Dining Hall" />
+            <div class="mob-slide-label"><i class="fas fa-chair"></i> Open Dining Hall</div>
+          </div>
+          <div class="mob-slide">
+            <img src="ambiance4.jpg" alt="Signature Presentation" />
+            <div class="mob-slide-label"><i class="fas fa-plate-wheat"></i> Signature Presentation</div>
+          </div>
+        </div>
+        <div class="mob-slide-dots" id="ambiance-dots"></div>
       </div>
 
       <!-- Ambiance features strip -->
@@ -1182,9 +1211,10 @@
 
         <!-- Map -->
         <div class="map-wrap" data-animate="fade-left">
-          <iframe title="Mehr Mandi & Grills Location – Cherthala Kerala"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4153.075906493191!2d76.3344523750271!3d9.691637990398624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b087d14b0318de7%3A0xb228706f5c812a9b!2sMehr%20mandi%20%26%20grills!5e1!3m2!1sen!2sin!4v1772180624061!5m2!1sen!2sin"
-            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe title="Mehr Mandi &amp; Grills Location – Cherthala Kerala"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3932.8758276039093!2d76.3344523750271!3d9.691637990398624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b087d14b0318de7%3A0xb228706f5c812a9b!2sMehr%20mandi%20%26%20grills!5e0!3m2!1sen!2sin!4v1772716091051!5m2!1sen!2sin"
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
     </div>
@@ -1360,6 +1390,139 @@
       dishes.forEach(function (d) { preload(d.src); });
 
       setInterval(crossfade, 10000);
+    })();
+  </script>
+
+  <!-- Mobile Gallery & Ambiance Auto-Slideshow -->
+  <script>
+    (function () {
+      // Only activate on mobile
+      if (window.innerWidth > 768) return;
+
+      /* ---- GALLERY horizontal scroll-snap auto-slide ---- */
+      (function initGallerySlider() {
+        var masonry = document.querySelector('.gallery-masonry');
+        var dotsContainer = document.getElementById('gallery-mob-dots');
+        if (!masonry || !dotsContainer) return;
+
+        var items = masonry.querySelectorAll('.gallery-item');
+        if (!items.length) return;
+
+        var count = items.length;
+        var current = 0;
+        var timer;
+
+        // Build dots
+        for (var i = 0; i < count; i++) {
+          var dot = document.createElement('button');
+          dot.className = 'mob-slide-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          (function (idx) {
+            dot.addEventListener('click', function () {
+              goTo(idx);
+              resetTimer();
+            });
+          })(i);
+          dotsContainer.appendChild(dot);
+        }
+
+        function updateDots() {
+          var dots = dotsContainer.querySelectorAll('.mob-slide-dot');
+          dots.forEach(function (d, i) {
+            d.classList.toggle('active', i === current);
+          });
+        }
+
+        function goTo(idx) {
+          current = (idx + count) % count;
+          var item = items[current];
+          masonry.scrollTo({ left: item.offsetLeft - (masonry.offsetWidth - item.offsetWidth) / 2, behavior: 'smooth' });
+          updateDots();
+        }
+
+        function next() { goTo(current + 1); }
+
+        function resetTimer() {
+          clearInterval(timer);
+          timer = setInterval(next, 3500);
+        }
+
+        // Sync dots on manual scroll
+        masonry.addEventListener('scroll', function () {
+          var closestIdx = 0;
+          var minDist = Infinity;
+          items.forEach(function (item, i) {
+            var dist = Math.abs(item.offsetLeft - masonry.scrollLeft - (masonry.offsetWidth - item.offsetWidth) / 2);
+            if (dist < minDist) { minDist = dist; closestIdx = i; }
+          });
+          if (closestIdx !== current) { current = closestIdx; updateDots(); }
+        });
+
+        resetTimer();
+      })();
+
+      /* ---- AMBIANCE CSS-transform slider ---- */
+      (function initAmbianceSlider() {
+        var track = document.getElementById('ambiance-slide-track');
+        var dotsContainer = document.getElementById('ambiance-dots');
+        if (!track || !dotsContainer) return;
+
+        var slides = track.querySelectorAll('.mob-slide');
+        if (!slides.length) return;
+
+        var count = slides.length;
+        var current = 0;
+        var startX = 0;
+        var isDragging = false;
+        var timer;
+
+        // Build dots
+        for (var i = 0; i < count; i++) {
+          var dot = document.createElement('button');
+          dot.className = 'mob-slide-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          (function (idx) {
+            dot.addEventListener('click', function () { goTo(idx); resetTimer(); });
+          })(i);
+          dotsContainer.appendChild(dot);
+        }
+
+        function updateDots() {
+          var dots = dotsContainer.querySelectorAll('.mob-slide-dot');
+          dots.forEach(function (d, i) { d.classList.toggle('active', i === current); });
+        }
+
+        function goTo(idx) {
+          current = (idx + count) % count;
+          track.style.transform = 'translateX(-' + (current * 100) + '%)';
+          updateDots();
+        }
+
+        function next() { goTo(current + 1); }
+
+        function resetTimer() {
+          clearInterval(timer);
+          timer = setInterval(next, 3500);
+        }
+
+        // Touch swipe support
+        track.addEventListener('touchstart', function (e) {
+          startX = e.touches[0].clientX;
+          isDragging = true;
+          clearInterval(timer);
+        }, { passive: true });
+
+        track.addEventListener('touchend', function (e) {
+          if (!isDragging) return;
+          isDragging = false;
+          var dx = e.changedTouches[0].clientX - startX;
+          if (Math.abs(dx) > 40) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+          resetTimer();
+        }, { passive: true });
+
+        resetTimer();
+      })();
+
     })();
   </script>
 

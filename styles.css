@@ -1410,6 +1410,65 @@ ul {
 }
 
 /* ========================
+   GALLERY SECTION
+   ======================== */
+.gallery-section {
+  padding: 100px 0;
+  background: var(--white);
+}
+
+.gallery-masonry {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 220px;
+  gap: 14px;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.gallery-item.tall {
+  grid-row: span 2;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.06);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 50%, rgba(58, 49, 43, 0.7));
+  display: flex;
+  align-items: flex-end;
+  padding: 18px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-overlay span {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+}
+
+/* ========================
    AMBIANCE SECTION
    ======================== */
 .ambiance-section {
@@ -2176,6 +2235,94 @@ ul {
 }
 
 /* ========================
+   MOBILE SLIDESHOW (Gallery & Ambiance)
+   ======================== */
+.ambiance-mobile-slider {
+  display: none;
+  /* hidden on desktop; shown via media query */
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  margin-bottom: 36px;
+}
+
+.mob-slide-track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.mob-slide {
+  flex: 0 0 100%;
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.mob-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.mob-slide-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(58, 49, 43, 0.75));
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 28px 18px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.02em;
+}
+
+.mob-slide-label i {
+  color: var(--gold);
+  font-size: 0.78rem;
+}
+
+.mob-slide-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 0 4px;
+}
+
+.mob-slide-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(178, 135, 93, 0.35);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  border: none;
+}
+
+.mob-slide-dot.active {
+  background: var(--red);
+  transform: scale(1.3);
+}
+
+/* Gallery slider dots */
+.gallery-mob-dots {
+  display: none;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 0 4px;
+}
+
+
+
+/* ========================
    RESPONSIVE — TABLET
    ======================== */
 @media (max-width: 1024px) {
@@ -2367,14 +2514,44 @@ ul {
     grid-template-columns: 1fr;
   }
 
-  /* Gallery */
+  /* Gallery — mobile horizontal slideshow */
   .gallery-masonry {
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 160px;
+    display: flex !important;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    padding-bottom: 8px;
+    grid-template-columns: unset;
+    grid-auto-rows: unset;
+    scrollbar-width: none;
+  }
+
+  .gallery-masonry::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-item {
+    flex: 0 0 78vw;
+    max-width: 340px;
+    min-height: 220px;
+    scroll-snap-align: center;
+    grid-row: unset !important;
+    border-radius: var(--radius-md);
   }
 
   .gallery-item.tall {
-    grid-row: span 2;
+    grid-row: span 1;
+    flex: 0 0 78vw;
+  }
+
+  .gallery-mob-dots {
+    display: flex;
+  }
+
+  .ambiance-mobile-slider {
+    display: block;
   }
 
   /* Reviews — horizontal slider on all mobile sizes */
@@ -2493,14 +2670,7 @@ ul {
     max-width: 200px;
   }
 
-  .gallery-masonry {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 200px;
-  }
-
-  .gallery-item.tall {
-    grid-row: span 1;
-  }
+  /* Gallery — 480px keeps same horizontal slider from 768px rule above */
 
   .footer-inner {
     grid-template-columns: 1fr;
@@ -2609,27 +2779,14 @@ ul {
     width: 100%;
   }
 
-  /* Ambiance mobile */
-  .ambiance-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .amb-hero {
-    height: 260px;
-  }
-
-  .amb-col {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    display: grid;
-  }
-
-  .amb-item {
-    height: 130px;
-  }
-
+  /* Ambiance — mobile horizontal slideshow */
+  .ambiance-grid,
   .ambiance-row2 {
-    grid-template-columns: 1fr;
+    display: none !important;
+  }
+
+  .ambiance-mobile-slider {
+    display: block;
   }
 
   .ambiance-features {
