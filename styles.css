@@ -240,6 +240,12 @@ ul {
   font-size: 0.85rem;
 }
 
+/* Mobile Only: Book Now (Zomato) button in header */
+.mobile-book-now-btn {
+  display: none;
+  /* hidden on desktop */
+}
+
 /* Floating Call Button (Mobile Only) */
 .call-float {
   display: none;
@@ -2374,6 +2380,29 @@ ul {
 
   .hamburger {
     display: flex;
+  }
+
+  .mobile-book-now-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--red);
+    color: var(--white) !important;
+    padding: 8px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    box-shadow: 0 4px 12px rgba(211, 26, 42, 0.2);
+    margin-left: auto;
+    margin-right: 12px;
+    transition: var(--transition);
+    white-space: nowrap;
+  }
+
+  .mobile-book-now-btn i {
+    font-size: 0.8rem;
   }
 
   .call-float {
