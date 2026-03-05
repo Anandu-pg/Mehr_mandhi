@@ -295,7 +295,7 @@
         `Please confirm my booking. Thank you!`
       );
 
-      window.open(`https://wa.me/919876543210?text=${message}`, '_blank');
+      window.open(`https://wa.me/919539233433?text=${message}`, '_blank');
       resForm.reset();
       showToast('Opening WhatsApp to confirm your reservation! 🎉');
     });
